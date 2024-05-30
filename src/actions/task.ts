@@ -32,3 +32,29 @@ export const createTask = async (state: FormState, formData: FormData) => {
   // リダイレクトはtrycatchの外で行う
   redirect("/");
 };
+
+export const updateTask = async (
+  id: string,
+  state: FormState,
+  formData: FormData
+) => {
+  const updateTask: Task = {
+    title: formData.get("title") as string,
+    description: formData.get("description") as string,
+    dueDate: formData.get("dueDate") as string,
+    isCompleted: Boolean(formData.get("isCompleted")),
+  };
+
+  try {
+    // DB接続確立
+    await connectDb();
+    // タスクの更新
+    await TaskModel.updateOne({ _id: id }, updateTask);
+  } catch (error) {
+    state.error = "タスクの更新に失敗しました";
+    return state;
+  }
+
+  // リダイレクトはtrycatchの外で行う
+  redirect("/");
+};
