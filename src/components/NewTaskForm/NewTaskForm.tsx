@@ -1,7 +1,31 @@
+"use client";
+
+import { FormState, createTask } from "@/actions/task";
+import { useFormState, useFormStatus } from "react-dom";
+
 const NewTaskForm = () => {
+  // Server Actionsの結果とServer Actionsと同じ機能を持つformAction関数を取得
+  const initialState: FormState = { error: "" };
+  const [state, formAction] = useFormState(createTask, initialState);
+
+  // Server Actions実行中はSubmitボタンをクリックできないようにする
+  const SubmitButton = () => {
+    const { pending } = useFormStatus();
+
+    return (
+      <button
+        type="submit"
+        className="mt-8 py-2 w-full rounded-md text-white bg-gray-800 hover:bg-gray-700 text-sm font-semibold shadow-sm disabled:bg-gray-400"
+        disabled={pending}
+      >
+        Create
+      </button>
+    );
+  };
+
   return (
     <div className="mt-10 mx-auto w-full max-w-sm">
-      <form action="">
+      <form action={formAction}>
         <div>
           <label htmlFor="title" className="block text-sm font-medium">
             タイトル
@@ -40,12 +64,10 @@ const NewTaskForm = () => {
             className="block mt-2 py-1.5 px-2 w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300"
           />
         </div>
-        <button
-          type="submit"
-          className="mt-8 py-2 w-full rounded-md text-white bg-gray-800 hover:bg-gray-700 text-sm font-semibold shadow-sm"
-        >
-          Create
-        </button>
+        <SubmitButton />
+        {state.error && (
+          <p className="mt-2 text-red-500 text-sm">{state.error}</p>
+        )}
       </form>
     </div>
   );
