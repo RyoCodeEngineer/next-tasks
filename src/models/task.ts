@@ -1,5 +1,8 @@
 import mongoose, { Document } from "mongoose";
 
+/**
+ * タスクの型定義
+ */
 export interface Task {
   title: string;
   description: string;
@@ -7,11 +10,17 @@ export interface Task {
   isCompleted: boolean;
 }
 
+/**
+ * タスクドキュメントの型定義
+ */
 export interface TaskDocument extends Task, Document {
   createdAt: Date;
   updatedAt: Date;
 }
 
+/**
+ * タスクテーブルの各項目詳細設定
+ */
 const taskSchema = new mongoose.Schema<TaskDocument>(
   {
     title: {
